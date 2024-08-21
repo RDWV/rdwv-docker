@@ -4,7 +4,7 @@ function display_help() {
     cat <<-END
 Usage:
 ------
-Restore Bitcart files
+Restore RDWV files
 This script must be run as root
     -h, --help: Show help
     --delete-backup: Delete backup file after restoring. Default: false
@@ -55,23 +55,23 @@ fi
 
 . helpers.sh
 load_env true
-cd "$BITCART_BASE_DIRECTORY"
+cd "$RDWV_BASE_DIRECTORY"
 
 TEMP_DIR=$(mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir')
 
 tar -C $TEMP_DIR -xvf "$BACKUP_FILE"
 
-echo "Stopping Bitcart…"
-bitcart_stop
+echo "Stopping RDWV…"
+rdwv_stop
 
 echo "Restoring database …"
-bitcart_restore_db $TEMP_DIR/database.sql
+rdwv_restore_db $TEMP_DIR/database.sql
 echo "Restoring docker volumes…"
 cp -r $TEMP_DIR/volumes/ /var/lib/docker
 cp -r $TEMP_DIR/plugins compose
 
-echo "Restarting Bitcart…"
-bitcart_start
+echo "Restarting RDWV…"
+rdwv_start
 
 rm -rf $TEMP_DIR
 

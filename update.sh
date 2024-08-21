@@ -5,7 +5,7 @@ set -e
 . helpers.sh
 load_env
 
-cd "$BITCART_BASE_DIRECTORY"
+cd "$RDWV_BASE_DIRECTORY"
 
 if [[ "$1" != "--skip-git-pull" ]]; then
     git pull --force
@@ -29,9 +29,9 @@ fi
 . helpers.sh
 check_docker_compose
 install_tooling
-bitcart_update_docker_env
-bitcart_pull
-bitcart_start
+rdwv_update_docker_env
+rdwv_pull
+rdwv_start
 
 set +e
-docker image prune -f --filter "label=org.bitcart.image" --filter "label!=org.bitcart.image=docker-compose-generator"
+docker image prune -f --filter "label=org.rdwv.image" --filter "label!=org.rdwv.image=docker-compose-generator"

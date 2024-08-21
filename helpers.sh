@@ -8,22 +8,22 @@ read_from_env_file() {
 
 read_from_env_file .deploy
 
-bitcart_update_docker_env() {
-    touch $BITCART_ENV_FILE
-    cat >$BITCART_ENV_FILE <<EOF
-BITCART_HOST=$BITCART_HOST
-BITCART_LETSENCRYPT_EMAIL=$BITCART_LETSENCRYPT_EMAIL
+rdwv_update_docker_env() {
+    touch $RDWV_ENV_FILE
+    cat >$RDWV_ENV_FILE <<EOF
+RDWV_HOST=$RDWV_HOST
+RDWV_LETSENCRYPT_EMAIL=$RDWV_LETSENCRYPT_EMAIL
 REVERSEPROXY_HTTP_PORT=$REVERSEPROXY_HTTP_PORT
 REVERSEPROXY_HTTPS_PORT=$REVERSEPROXY_HTTPS_PORT
 REVERSEPROXY_DEFAULT_HOST=$REVERSEPROXY_DEFAULT_HOST
-BITCART_SSH_KEY_FILE=$BITCART_SSH_KEY_FILE
-BITCART_SSH_AUTHORIZED_KEYS=$BITCART_SSH_AUTHORIZED_KEYS
-BITCART_HOST_SSH_AUTHORIZED_KEYS=$BITCART_HOST_SSH_AUTHORIZED_KEYS
-BITCART_STORE_HOST=$BITCART_STORE_HOST
-BITCART_STORE_API_URL=$BITCART_STORE_API_URL
-BITCART_ADMIN_HOST=$BITCART_ADMIN_HOST
-BITCART_ADMIN_API_URL=$BITCART_ADMIN_API_URL
-BITCART_CRYPTOS=$BITCART_CRYPTOS
+RDWV_SSH_KEY_FILE=$RDWV_SSH_KEY_FILE
+RDWV_SSH_AUTHORIZED_KEYS=$RDWV_SSH_AUTHORIZED_KEYS
+RDWV_HOST_SSH_AUTHORIZED_KEYS=$RDWV_HOST_SSH_AUTHORIZED_KEYS
+RDWV_STORE_HOST=$RDWV_STORE_HOST
+RDWV_STORE_API_URL=$RDWV_STORE_API_URL
+RDWV_ADMIN_HOST=$RDWV_ADMIN_HOST
+RDWV_ADMIN_API_URL=$RDWV_ADMIN_API_URL
+RDWV_CRYPTOS=$RDWV_CRYPTOS
 BTC_NETWORK=$BTC_NETWORK
 BTC_LIGHTNING=$BTC_LIGHTNING
 BCH_NETWORK=$BCH_NETWORK
@@ -43,44 +43,44 @@ XMR_NETWORK=$XMR_NETWORK
 TOR_RELAY_NICKNAME=$TOR_RELAY_NICKNAME
 TOR_RELAY_EMAIL=$TOR_RELAY_EMAIL
 CLOUDFLARE_TUNNEL_TOKEN=$CLOUDFLARE_TUNNEL_TOKEN
-BITCART_HTTPS_ENABLED=$BITCART_HTTPS_ENABLED
-BITCART_VERSION=$BITCART_VERSION
-BITCART_UPDATE_URL=$BITCART_UPDATE_URL
-$(env | awk -F "=" '{print "\n"$0}' | grep "BITCART_.*.*_PORT")
-$(env | awk -F "=" '{print "\n"$0}' | grep "BITCART_.*.*_EXPOSE")
-$(env | awk -F "=" '{print "\n"$0}' | grep "BITCART_.*.*_SCALE")
-$(env | awk -F "=" '{print "\n"$0}' | grep "BITCART_.*.*_ROOTPATH")
+RDWV_HTTPS_ENABLED=$RDWV_HTTPS_ENABLED
+RDWV_VERSION=$RDWV_VERSION
+RDWV_UPDATE_URL=$RDWV_UPDATE_URL
+$(env | awk -F "=" '{print "\n"$0}' | grep "RDWV_.*.*_PORT")
+$(env | awk -F "=" '{print "\n"$0}' | grep "RDWV_.*.*_EXPOSE")
+$(env | awk -F "=" '{print "\n"$0}' | grep "RDWV_.*.*_SCALE")
+$(env | awk -F "=" '{print "\n"$0}' | grep "RDWV_.*.*_ROOTPATH")
 $(env | awk -F "=" '{print "\n"$0}' | grep ".*_SERVER")
 $(env | awk -F "=" '{print "\n"$0}' | grep ".*_DEBUG")
 $(env | awk -F "=" '{print "\n"$0}' | grep ".*_LIGHTNING_GOSSIP")
 EOF
 }
 
-bitcart_start() {
+rdwv_start() {
     create_backup_volume
     install_plugins
     docker compose -p "$NAME" -f compose/generated.yml up --build --remove-orphans -d $1
 }
 
-bitcart_stop() {
+rdwv_stop() {
     docker compose -p "$NAME" -f compose/generated.yml down
 }
 
-bitcart_reset_plugins() {
+rdwv_reset_plugins() {
     export ADMIN_PLUGINS_HASH=
     export STORE_PLUGINS_HASH=
     export BACKEND_PLUGINS_HASH=
     export DOCKER_PLUGINS_HASH=
 }
 
-bitcart_pull() {
+rdwv_pull() {
     docker compose -f compose/generated.yml pull
-    bitcart_reset_plugins
+    rdwv_reset_plugins
 }
 
-bitcart_restart() {
-    bitcart_stop
-    bitcart_start
+rdwv_restart() {
+    rdwv_stop
+    rdwv_start
 }
 
 get_profile_file() {
@@ -94,7 +94,7 @@ get_profile_file() {
             exit 1
         fi
 
-        BASH_PROFILE_SCRIPT="$HOME/bitcart-env$1.sh"
+        BASH_PROFILE_SCRIPT="$HOME/rdwv-env$1.sh"
 
         # Mac OS doesn't use /etc/profile.d/xxx.sh. Instead we create a new file and load that from ~/.bash_profile
         if [[ ! -f "$HOME/.bash_profile" ]]; then
@@ -106,7 +106,7 @@ get_profile_file() {
         fi
 
     else
-        BASH_PROFILE_SCRIPT="/etc/profile.d/bitcart-env$1.sh"
+        BASH_PROFILE_SCRIPT="/etc/profile.d/rdwv-env$1.sh"
 
         if $CHECK_ROOT && [[ $EUID -ne 0 ]]; then
             echo "This script must be run as root after running \"sudo su -\""
@@ -146,15 +146,15 @@ modify_host() {
 }
 
 apply_local_modifications() {
-    if [[ "$BITCART_HOST" == *.local ]]; then
+    if [[ "$RDWV_HOST" == *.local ]]; then
         echo "Local setup detected."
-        if [[ "$BITCART_NOHOSTSEDIT" = true ]]; then
+        if [[ "$RDWV_NOHOSTSEDIT" = true ]]; then
             echo "Not modifying hosts."
         else
             echo "WARNING! Modifying /etc/hosts to make local setup work. It may require superuser privileges."
-            modify_host 172.17.0.1 $BITCART_STORE_HOST
-            modify_host 172.17.0.1 $BITCART_HOST
-            modify_host 172.17.0.1 $BITCART_ADMIN_HOST
+            modify_host 172.17.0.1 $RDWV_STORE_HOST
+            modify_host 172.17.0.1 $RDWV_HOST
+            modify_host 172.17.0.1 $RDWV_ADMIN_HOST
         fi
     fi
 }
@@ -176,13 +176,13 @@ create_backup_volume() {
     fi
 }
 
-bitcart_dump_db() {
+rdwv_dump_db() {
     create_backup_volume
     docker exec $(container_name "database-1") pg_dumpall -c -U postgres >"$backup_dir/$1"
 }
 
-bitcart_restore_db() {
-    bitcart_start database
+rdwv_restore_db() {
+    rdwv_start database
     # wait for db to be up
     until docker exec -i $(container_name "database-1") psql -U postgres -c '\l'; do
         echo >&2 "Postgres is unavailable - sleeping"
@@ -221,13 +221,13 @@ install_docker_compose() {
 }
 
 install_tooling() {
-    try sudo cp compose/scripts/cli-autocomplete.sh /etc/bash_completion.d/bitcart-cli.sh
-    try sudo chmod +x /etc/bash_completion.d/bitcart-cli.sh
+    try sudo cp compose/scripts/cli-autocomplete.sh /etc/bash_completion.d/rdwv-cli.sh
+    try sudo chmod +x /etc/bash_completion.d/rdwv-cli.sh
 }
 
 save_deploy_config() {
-    BITCART_DEPLOYMENT_CONFIG="$BITCART_BASE_DIRECTORY/.deploy"
-    cat >${BITCART_DEPLOYMENT_CONFIG} <<EOF
+    RDWV_DEPLOYMENT_CONFIG="$RDWV_BASE_DIRECTORY/.deploy"
+    cat >${RDWV_DEPLOYMENT_CONFIG} <<EOF
 #!/bin/bash
 NAME=$NAME
 SCRIPTS_POSTFIX=$SCRIPTS_POSTFIX
@@ -236,8 +236,8 @@ STORE_PLUGINS_HASH=$(get_plugins_hash store)
 BACKEND_PLUGINS_HASH=$(get_plugins_hash backend)
 DOCKER_PLUGINS_HASH=$(get_plugins_hash docker)
 EOF
-    chmod +x ${BITCART_DEPLOYMENT_CONFIG}
-    read_from_env_file $BITCART_DEPLOYMENT_CONFIG
+    chmod +x ${RDWV_DEPLOYMENT_CONFIG}
+    read_from_env_file $RDWV_DEPLOYMENT_CONFIG
 }
 
 get_plugins_hash() {
@@ -245,7 +245,7 @@ get_plugins_hash() {
 }
 
 make_backup_image() {
-    if [ "$(docker inspect --format '{{ index .Config.Labels "org.bitcart.plugins"}}' $1:stable)" = true ]; then
+    if [ "$(docker inspect --format '{{ index .Config.Labels "org.rdwv.plugins"}}' $1:stable)" = true ]; then
         :
     else
         docker tag $1:stable $1:original
@@ -254,41 +254,41 @@ make_backup_image() {
 
 install_plugins() {
     COMPONENTS=$(./build.sh --components-only | tail -1)
-    failed_file="/var/lib/docker/volumes/$(volume_name "bitcart_datadir")/_data/.plugins-failed"
+    failed_file="/var/lib/docker/volumes/$(volume_name "rdwv_datadir")/_data/.plugins-failed"
     error=false
     rm -f $failed_file
     if [[ " ${COMPONENTS[*]} " =~ " backend " ]]; then
-        make_backup_image bitcart/bitcart
+        make_backup_image rdwv/rdwv
     fi
     if [[ " ${COMPONENTS[*]} " =~ " admin " ]]; then
-        make_backup_image bitcart/bitcart-admin
+        make_backup_image rdwv/rdwv-admin
     fi
     if [[ " ${COMPONENTS[*]} " =~ " store " ]]; then
-        make_backup_image bitcart/bitcart-store
+        make_backup_image rdwv/rdwv-store
     fi
     if [[ "$DOCKER_PLUGINS_HASH" != "$(get_plugins_hash docker)" ]]; then
         ./build.sh || touch $failed_file
         docker compose -f compose/generated.yml config || touch $failed_file
     fi
     if [[ " ${COMPONENTS[*]} " =~ " backend " ]] && [[ "$BACKEND_PLUGINS_HASH" != "$(get_plugins_hash backend)" ]]; then
-        docker build -t bitcart/bitcart:stable -f compose/backend-plugins.Dockerfile compose || error=true
+        docker build -t rdwv/rdwv:stable -f compose/backend-plugins.Dockerfile compose || error=true
     fi
     if [[ "$error" = false ]] && [[ " ${COMPONENTS[*]} " =~ " admin " ]] && [[ "$ADMIN_PLUGINS_HASH" != "$(get_plugins_hash admin)" ]]; then
-        docker build -t bitcart/bitcart-admin:stable -f compose/admin-plugins.Dockerfile compose || error=true
+        docker build -t rdwv/rdwv-admin:stable -f compose/admin-plugins.Dockerfile compose || error=true
     fi
     if [[ "$error" = false ]] && [[ " ${COMPONENTS[*]} " =~ " store " ]] && [[ "$STORE_PLUGINS_HASH" != "$(get_plugins_hash store)" ]]; then
-        docker build -t bitcart/bitcart-store:stable -f compose/store-plugins.Dockerfile compose || error=true
+        docker build -t rdwv/rdwv-store:stable -f compose/store-plugins.Dockerfile compose || error=true
     fi
     if [[ "$error" = true ]]; then
         echo "Plugins installation failed, restoring original images"
         if [[ " ${COMPONENTS[*]} " =~ " backend " ]]; then
-            docker tag bitcart/bitcart:original bitcart/bitcart:stable
+            docker tag rdwv/rdwv:original rdwv/rdwv:stable
         fi
         if [[ " ${COMPONENTS[*]} " =~ " admin " ]]; then
-            docker tag bitcart/bitcart-admin:original bitcart/bitcart-admin:stable
+            docker tag rdwv/rdwv-admin:original rdwv/rdwv-admin:stable
         fi
         if [[ " ${COMPONENTS[*]} " =~ " store " ]]; then
-            docker tag bitcart/bitcart-store:original bitcart/bitcart-store:stable
+            docker tag rdwv/rdwv-store:original rdwv/rdwv-store:stable
         fi
         touch $failed_file
     fi

@@ -8,14 +8,14 @@ FROM python:3.11-alpine AS base
 
 ENV ELECTRUM_USER electrum
 ENV ELECTRUM_HOME /home/$ELECTRUM_USER
-ENV ELECTRUM_DIRECTORY ${ELECTRUM_HOME}/.bitcart-trx
+ENV ELECTRUM_DIRECTORY ${ELECTRUM_HOME}/.rdwv-trx
 ENV IN_DOCKER=1
 ENV TRX_HOST 0.0.0.0
-LABEL org.bitcart.image=trx-daemon
+LABEL org.rdwv.image=trx-daemon
 
 FROM base AS compile-image
 
-COPY bitcart $ELECTRUM_HOME/site
+COPY rdwv $ELECTRUM_HOME/site
 
 RUN apk add gcc python3-dev musl-dev automake autoconf libtool file git make libffi-dev && \
     cd $ELECTRUM_HOME/site && \

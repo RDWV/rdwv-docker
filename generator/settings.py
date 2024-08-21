@@ -43,7 +43,7 @@ class Settings:
         if self.ONE_DOMAIN_MODE and self.INSTALLATION_PACK == "frontend":
             config_error(
                 "Frontend installation pack is enabled and no API URL set. "
-                "Please set BITCART_ADMIN_API_URL and BITCART_STORE_API_URL."
+                "Please set RDWV_ADMIN_API_URL and RDWV_STORE_API_URL."
             )
 
     @staticmethod

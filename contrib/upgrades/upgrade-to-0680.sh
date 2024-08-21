@@ -7,4 +7,4 @@ volumes_dir=/var/lib/docker/volumes
 datadir="$volumes_dir/$(volume_name tor_servicesdir)/_data"
 
 find "$datadir" -type d -exec chmod 750 '{}' +
-bitcart_restart
+rdwv_restart

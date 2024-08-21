@@ -6,7 +6,7 @@ def rule(services, settings):
     if not settings.HOST or not settings.HOST.endswith(".local"):
         return
     custom_web_services = [
-        key for key, service in services.items() if service.get("environment", {}).get("BITCART_WEBSERVICE", False)
+        key for key, service in services.items() if service.get("environment", {}).get("RDWV_WEBSERVICE", False)
     ]
     items = HOST_COMPONENTS + custom_web_services
     for i in items:

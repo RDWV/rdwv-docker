@@ -31,7 +31,7 @@ def check_root_path(services, service, value):
     if value is None:
         assert service not in services
         return
-    root_path = services[service]["environment"][f"BITCART_{service.upper()}_ROOTPATH"]
+    root_path = services[service]["environment"][f"RDWV_{service.upper()}_ROOTPATH"]
     default = root_path.split(":-")[1].replace("}", "")
     if value != "/":
         assert default == value
@@ -49,15 +49,15 @@ def test_one_domain_rule():
     check_one_domain_setting("STORE_HOST")
     check_one_domain_setting("ADMIN_API_URL")
     check_one_domain_setting("STORE_API_URL")
-    assert services["admin"]["environment"]["BITCART_ADMIN_API_URL"] == "https://None/api"
+    assert services["admin"]["environment"]["RDWV_ADMIN_API_URL"] == "https://None/api"
     set_env("REVERSEPROXY_HTTPS_PORT", "445", prefix="")
     services = generate_config()["services"]
-    assert services["admin"]["environment"]["BITCART_ADMIN_API_URL"] == "https://None:445/api"
+    assert services["admin"]["environment"]["RDWV_ADMIN_API_URL"] == "https://None:445/api"
     delete_env("REVERSEPROXY_HTTPS_PORT", prefix="")
     set_env("REVERSEPROXY_HTTP_PORT", "445", prefix="")
     set_env("REVERSEPROXY", "nginx")
     services = generate_config()["services"]
-    assert services["admin"]["environment"]["BITCART_ADMIN_API_URL"] == "http://None:445/api"
+    assert services["admin"]["environment"]["RDWV_ADMIN_API_URL"] == "http://None:445/api"
     delete_env("REVERSEPROXY_HTTP_PORT", prefix="")
     delete_env("REVERSEPROXY")
     # Check preferred service setting
@@ -193,7 +193,7 @@ def test_scale():
 
 
 # Rule 9: allow using older versions
-def test_bitcart_version():
+def test_rdwv_version():
     services = generate_config()["services"]
     for service in ("backend", "admin", "store", "bitcoin", "worker"):
         assert services[service]["image"].endswith(":stable")
@@ -208,7 +208,7 @@ def test_bitcart_version():
 def test_local_deploy():
     services = generate_config()["services"]
     assert "extra_hosts" not in services["store"]
-    set_env("HOST", "bitcart.local")
+    set_env("HOST", "rdwv.local")
     services = generate_config()["services"]
-    assert services["store"]["extra_hosts"] == ["bitcart.local:172.17.0.1"]
+    assert services["store"]["extra_hosts"] == ["rdwv.local:172.17.0.1"]
     delete_env("HOST")

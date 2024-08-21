@@ -6,17 +6,17 @@ set -e
 
 cd ../..
 
-[ -d bitcart-docker ] || mv repo bitcart-docker
+[ -d rdwv-docker ] || mv repo rdwv-docker
 
-cd bitcart-docker
+cd rdwv-docker
 
-export BITCART_HOST=bitcart.local
-export REVERSEPROXY_DEFAULT_HOST=bitcart.local
-export BITCART_CRYPTOS=btc,ltc
-export BITCART_REVERSEPROXY=nginx
+export RDWV_HOST=rdwv.local
+export REVERSEPROXY_DEFAULT_HOST=rdwv.local
+export RDWV_CRYPTOS=btc,ltc
+export RDWV_REVERSEPROXY=nginx
 export BTC_LIGHTNING=true
 # Use current repo's generator
-export BITCARTGEN_DOCKER_IMAGE=bitcart/docker-compose-generator:local
+export RDWVGEN_DOCKER_IMAGE=rdwv/docker-compose-generator:local
 ./setup.sh
 
 timeout 1m bash .circleci/test-connectivity.sh

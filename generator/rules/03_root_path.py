@@ -13,25 +13,25 @@ def rule(services, settings):
     # replace defaults
     if STORE_AVAILABLE:
         with modify_key(services, "store", "environment") as environment:
-            environment["BITCART_STORE_API_URL"] = API_URL
+            environment["RDWV_STORE_API_URL"] = API_URL
         if ADMIN_AVAILABLE:
             with modify_key(services, "admin", "environment") as environment:
-                environment["BITCART_ADMIN_ROOTPATH"] = environment["BITCART_ADMIN_ROOTPATH"].replace("/", "/admin")
-                environment["BITCART_ADMIN_API_URL"] = API_URL
-                environment["BITCART_STORE_HOST"] = settings.HOST or ""
+                environment["RDWV_ADMIN_ROOTPATH"] = environment["RDWV_ADMIN_ROOTPATH"].replace("/", "/admin")
+                environment["RDWV_ADMIN_API_URL"] = API_URL
+                environment["RDWV_STORE_HOST"] = settings.HOST or ""
             with modify_key(services, "store", "environment") as environment:
-                environment["BITCART_ADMIN_HOST"] = urljoin(settings.HOST or "", "admin")
-                environment["BITCART_ADMIN_ROOTPATH"] = environment["BITCART_ADMIN_ROOTPATH"].replace("/", "/admin")
+                environment["RDWV_ADMIN_HOST"] = urljoin(settings.HOST or "", "admin")
+                environment["RDWV_ADMIN_ROOTPATH"] = environment["RDWV_ADMIN_ROOTPATH"].replace("/", "/admin")
     elif ADMIN_AVAILABLE:
         with modify_key(services, "admin", "environment") as environment:
-            environment["BITCART_ADMIN_API_URL"] = API_URL
+            environment["RDWV_ADMIN_API_URL"] = API_URL
     if BACKEND_AVAILABLE and (ADMIN_AVAILABLE or STORE_AVAILABLE):
         with modify_key(services, "backend", "environment") as environment:
-            environment["BITCART_BACKEND_ROOTPATH"] = environment["BITCART_BACKEND_ROOTPATH"].replace("-}", "-/api}")
+            environment["RDWV_BACKEND_ROOTPATH"] = environment["RDWV_BACKEND_ROOTPATH"].replace("-}", "-/api}")
     if BACKEND_AVAILABLE and ADMIN_AVAILABLE:
         with modify_key(services, "backend", "environment") as environment:
             if STORE_AVAILABLE:
-                environment["BITCART_ADMIN_HOST"] = urljoin(settings.HOST or "", "admin")
-                environment["BITCART_ADMIN_ROOTPATH"] = environment["BITCART_ADMIN_ROOTPATH"].replace("/", "/admin")
+                environment["RDWV_ADMIN_HOST"] = urljoin(settings.HOST or "", "admin")
+                environment["RDWV_ADMIN_ROOTPATH"] = environment["RDWV_ADMIN_ROOTPATH"].replace("/", "/admin")
             else:
-                environment["BITCART_ADMIN_HOST"] = settings.HOST or ""
+                environment["RDWV_ADMIN_HOST"] = settings.HOST or ""

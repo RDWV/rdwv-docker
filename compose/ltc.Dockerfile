@@ -11,11 +11,11 @@ ENV ELECTRUM_HOME /home/$ELECTRUM_USER
 ENV ELECTRUM_DIRECTORY ${ELECTRUM_HOME}/.electrum-ltc
 ENV IN_DOCKER=1
 ENV LTC_HOST 0.0.0.0
-LABEL org.bitcart.image=ltc-daemon
+LABEL org.rdwv.image=ltc-daemon
 
 FROM base AS compile-image
 
-COPY bitcart $ELECTRUM_HOME/site
+COPY rdwv $ELECTRUM_HOME/site
 
 RUN apk add python3-dev build-base libffi-dev openssl-dev && \
     cd $ELECTRUM_HOME/site && \

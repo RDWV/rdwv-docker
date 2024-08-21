@@ -11,11 +11,11 @@ ENV ELECTRUM_HOME /home/$ELECTRUM_USER
 ENV ELECTRUM_DIRECTORY ${ELECTRUM_HOME}/.electrum-bsty
 ENV IN_DOCKER=1
 ENV BSTY_HOST 0.0.0.0
-LABEL org.bitcart.image=bsty-daemon
+LABEL org.rdwv.image=bsty-daemon
 
 FROM base AS compile-image
 
-COPY bitcart $ELECTRUM_HOME/site
+COPY rdwv $ELECTRUM_HOME/site
 
 RUN apk add python3-dev build-base libffi-dev && \
     cd $ELECTRUM_HOME/site && \

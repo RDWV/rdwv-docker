@@ -6,7 +6,7 @@
 .mypy_cache
 .pytest_cache/
 .vscode/
-/compose/bitcart/
+/compose/rdwv/
 __pycache__/
 compose/generated.yml
 coverage.xml

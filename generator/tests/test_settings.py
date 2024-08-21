@@ -124,7 +124,7 @@ def test_https_hint():
     set_env("REVERSEPROXY", "nginx")
     config = generate_config()
     assert "letsencrypt-nginx-proxy-companion" not in config["services"]
-    assert config["services"]["admin"]["environment"]["BITCART_ADMIN_API_URL"].startswith("https://")
+    assert config["services"]["admin"]["environment"]["RDWV_ADMIN_API_URL"].startswith("https://")
     # Cleanup
     delete_env("HTTPS_ENABLED")
     delete_env("REVERSEPROXY")

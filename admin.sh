@@ -23,7 +23,7 @@ EOF
 }
 
 sqlquery() {
-    docker exec $(container_name database-1) psql -U postgres -d bitcart -c "$*"
+    docker exec $(container_name database-1) psql -U postgres -d rdwv -c "$*"
 }
 
 case "$1" in

@@ -3,7 +3,7 @@ for org in modules/*; do
     if [ -d "$org" ]; then
         for plugin in "$org"/*; do
             if [ -d "$plugin" ]; then
-                if [ "$plugin" = "modules/@bitcart/core" ]; then
+                if [ "$plugin" = "modules/@rdwv/core" ]; then
                     continue
                 fi
                 found=true

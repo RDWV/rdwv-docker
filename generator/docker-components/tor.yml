@@ -1,7 +1,7 @@
 services:
   backend:
     environment:
-      HIDDENSERVICE_NAME: Bitcart-Merchants-API
+      HIDDENSERVICE_NAME: RDWV-Merchants-API
       TORRC_FILE: /usr/local/etc/tor/torrc-2
     volumes:
       - "tor_servicesdir:/var/lib/tor/hidden_services"
@@ -16,15 +16,15 @@ services:
 
   admin:
     environment:
-      HIDDENSERVICE_NAME: Bitcart-Admin-Panel
-      BITCART_ADMIN_SOCKS_PROXY: socks5h://tor:9050
+      HIDDENSERVICE_NAME: RDWV-Admin-Panel
+      RDWV_ADMIN_SOCKS_PROXY: socks5h://tor:9050
     volumes:
       - "tor_servicesdir:/var/lib/tor/hidden_services"
 
   store:
     environment:
-      HIDDENSERVICE_NAME: Bitcart-Store
-      BITCART_STORE_SOCKS_PROXY: socks5h://tor:9050
+      HIDDENSERVICE_NAME: RDWV-Store
+      RDWV_STORE_SOCKS_PROXY: socks5h://tor:9050
     volumes:
       - "tor_servicesdir:/var/lib/tor/hidden_services"
 
@@ -37,9 +37,9 @@ services:
 
   tor:
     restart: unless-stopped
-    image: bitcart/tor:0.4.7.13
+    image: rdwv/tor:0.4.7.13
     environment:
-      TOR_PASSWORD: bitcart
+      TOR_PASSWORD: rdwv
       TOR_ADDITIONAL_CONFIG: /usr/local/etc/tor/torrc-2
       TOR_EXTRA_ARGS: |
         CookieAuthentication 1
@@ -54,7 +54,7 @@ services:
 
   tor-gen:
     restart: unless-stopped
-    image: bitcart/docker-gen:0.9.2
+    image: rdwv/docker-gen:0.9.2
     volumes:
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
       - "./torrc.tmpl:/etc/docker-gen/templates/torrc.tmpl:ro"

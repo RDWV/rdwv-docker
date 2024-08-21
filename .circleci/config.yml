@@ -1,11 +1,11 @@
 version: 2.1
 
 orbs:
-  bitcart: bitcart/bitcart-shared@2
+  rdwv: rdwv/rdwv-shared@2
 
 jobs:
   test:
-    executor: bitcart/docker-python
+    executor: rdwv/docker-python
 
     working_directory: ~/repo
 
@@ -23,11 +23,11 @@ jobs:
           command: |
             make ci
 
-      - bitcart/codecov:
+      - rdwv/codecov:
           args: ""
 
   cansetup:
-    executor: bitcart/build-ubuntu
+    executor: rdwv/build-ubuntu
     working_directory: ~/repo
     steps:
       - checkout
@@ -38,7 +38,7 @@ jobs:
             sudo ./test-install.sh
 
   deploy:
-    executor: bitcart/build-ubuntu
+    executor: rdwv/build-ubuntu
 
     environment:
       BUILD_PLATFORMS: linux/amd64,linux/arm64/v8
@@ -47,22 +47,22 @@ jobs:
 
     steps:
       - checkout
-      - bitcart/login-to-registries
-      - bitcart/enable-buildx
+      - rdwv/login-to-registries
+      - rdwv/enable-buildx
       - run:
           name: build docker image
           command: |
             cd generator
-            docker buildx build --progress plain --push --platform ${BUILD_PLATFORMS} --tag bitcart/docker-compose-generator:latest \
-            --tag ghcr.io/bitcart/docker-compose-generator:latest .
+            docker buildx build --progress plain --push --platform ${BUILD_PLATFORMS} --tag rdwv/docker-compose-generator:latest \
+            --tag ghcr.io/rdwv/docker-compose-generator:latest .
 
 workflows:
   version: 2
   build:
     jobs:
-      - bitcart/lint:
+      - rdwv/lint:
           name: lint
-          executor: bitcart/build-ubuntu
+          executor: rdwv/build-ubuntu
       - test:
           requires:
             - lint

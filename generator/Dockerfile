@@ -1,5 +1,5 @@
 FROM python:3.11-alpine
-LABEL org.bitcart.image=docker-compose-generator
+LABEL org.rdwv.image=docker-compose-generator
 COPY . /app/generator
 WORKDIR /app
 RUN pip3 install -r generator/requirements.txt

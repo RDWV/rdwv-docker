@@ -39,7 +39,7 @@ def check_service(service, service_data):
     assert len(service_data.keys()) > 0
     if service_data.get("image") or service_data.get("build"):
         assert service_data.keys() >= {"restart", "image"}
-        assert service in THIRD_PARTY_IMAGES or "bitcart" in service_data["image"]
+        assert service in THIRD_PARTY_IMAGES or "rdwv" in service_data["image"]
         assert service_data["restart"] == "unless-stopped" if service != "cloudflared" else "on-failure"
         # Pin versions
         assert ":" in service_data["image"]
@@ -112,7 +112,7 @@ def get_saved_config(config, path):
 
 
 def test_save_config(config):
-    with tempfile.TemporaryDirectory(prefix="bitcart-docker-tests-") as tmp:
+    with tempfile.TemporaryDirectory(prefix="rdwv-docker-tests-") as tmp:
         path = os.path.join(tmp, "generated.yml")
         output = get_saved_config(config, path)
         # deterministic

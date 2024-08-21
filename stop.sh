@@ -3,5 +3,5 @@
 . helpers.sh
 load_env
 
-cd "$BITCART_BASE_DIRECTORY"
-bitcart_stop
+cd "$RDWV_BASE_DIRECTORY"
+rdwv_stop

@@ -5,11 +5,11 @@ ENV ELECTRUM_HOME /home/$ELECTRUM_USER
 ENV ELECTRUM_DIRECTORY ${ELECTRUM_HOME}/.{{ env.name }}{{ if env.custom == "false" and env.coin != "btc" then "-"+env.coin else "" end }}
 ENV IN_DOCKER=1
 ENV {{ env.coin | ascii_upcase }}_HOST 0.0.0.0
-LABEL org.bitcart.image={{ env.coin }}-daemon
+LABEL org.rdwv.image={{ env.coin }}-daemon
 
 FROM base AS compile-image
 
-COPY bitcart $ELECTRUM_HOME/site
+COPY rdwv $ELECTRUM_HOME/site
 
 {{ if env.bases == "btc" then ( -}}
 RUN apk add python3-dev build-base libffi-dev{{ if env.coin == "ltc" then " openssl-dev" else . end }} && \

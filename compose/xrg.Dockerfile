@@ -11,11 +11,11 @@ ENV ELECTRUM_HOME /home/$ELECTRUM_USER
 ENV ELECTRUM_DIRECTORY ${ELECTRUM_HOME}/.oregano
 ENV IN_DOCKER=1
 ENV XRG_HOST 0.0.0.0
-LABEL org.bitcart.image=xrg-daemon
+LABEL org.rdwv.image=xrg-daemon
 
 FROM base AS compile-image
 
-COPY bitcart $ELECTRUM_HOME/site
+COPY rdwv $ELECTRUM_HOME/site
 
 RUN apk add gcc python3-dev musl-dev automake autoconf libtool file git make libffi-dev openssl-dev rust cargo && \
     cd $ELECTRUM_HOME/site && \

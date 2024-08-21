@@ -3,7 +3,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 . "${SCRIPT_DIR}/../../helpers.sh"
 load_env
 
-docker exec -i $(container_name database-1) psql -U postgres bitcart <<EOF
+docker exec -i $(container_name database-1) psql -U postgres rdwv <<EOF
 ALTER TABLE discountsxproducts RENAME CONSTRAINT discountsxproducts_discount_id_fkey TO discountsxproducts_discount_id_discounts_fkey;
 ALTER TABLE discountsxproducts RENAME CONSTRAINT discountsxproducts_product_id_fkey TO discountsxproducts_product_id_products_fkey;
 ALTER TABLE discounts RENAME CONSTRAINT discounts_user_id_fkey TO discounts_user_id_users_fkey;

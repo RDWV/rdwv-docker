@@ -15,14 +15,14 @@ load_env
 COMPOSE_DIR="$(realpath "${SCRIPT_DIR}/../../compose")"
 
 volumes_dir=/var/lib/docker/volumes
-datadir="$volumes_dir/$(volume_name bitcart_datadir)/_data"
-logdir="$volumes_dir/$(volume_name bitcart_logs)/_data"
+datadir="$volumes_dir/$(volume_name rdwv_datadir)/_data"
+logdir="$volumes_dir/$(volume_name rdwv_logs)/_data"
 cp -rv --preserve $logdir/* $datadir/logs/
-for fname in $datadir/logs/bitcart-log.log*; do
+for fname in $datadir/logs/rdwv-log.log*; do
     fname_new=$(convert_name "$fname")
     mv -v "$fname" "$fname_new"
 done
-docker volume rm $(volume_name bitcart_logs)
+docker volume rm $(volume_name rdwv_logs)
 cp -rv --preserve $COMPOSE_DIR/images/* $datadir/images/
 rm -rf "$COMPOSE_DIR/images"
 rm -rf "$COMPOSE_DIR/conf"

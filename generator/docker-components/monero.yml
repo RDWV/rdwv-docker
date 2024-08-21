@@ -1,7 +1,7 @@
 services:
   monero:
     restart: unless-stopped
-    image: bitcart/bitcart-xmr:stable
+    image: rdwv/rdwv-xmr:stable
     environment:
       XMR_NETWORK: ${XMR_NETWORK:-mainnet}
       XMR_SERVER: ${XMR_SERVER:-https://node.sethforprivacy.com}

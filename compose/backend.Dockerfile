@@ -1,17 +1,17 @@
 FROM golang:1.18-alpine AS go-builder
 
-RUN CGO_ENABLED=0 go install -ldflags '-X main.Version=docker -X main.envFile=/app/conf/.env' github.com/bitcart/bitcart-cli@master
+RUN CGO_ENABLED=0 go install -ldflags '-X main.Version=docker -X main.envFile=/app/conf/.env' github.com/rdwv/rdwv-cli@master
 
 FROM python:3.11-slim-bullseye
 
 ARG TARGETPLATFORM
 ENV IN_DOCKER=1
 ENV GOSU_VERSION 1.16
-LABEL org.bitcart.image=backend
+LABEL org.rdwv.image=backend
 
-COPY bitcart /app
+COPY rdwv /app
 COPY scripts/docker-entrypoint.sh /usr/local/bin/
-COPY --from=go-builder /go/bin/bitcart-cli /usr/local/bin/
+COPY --from=go-builder /go/bin/rdwv-cli /usr/local/bin/
 WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends iproute2 openssh-client build-essential python3-dev libffi-dev ca-certificates wget libjemalloc2 && \
     dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" && \

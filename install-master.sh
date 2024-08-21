@@ -5,7 +5,7 @@ set -e
 . helpers.sh
 load_env
 
-cd "$BITCART_BASE_DIRECTORY"
+cd "$RDWV_BASE_DIRECTORY"
 
 # Create a backup
 ./backup.sh
@@ -13,31 +13,31 @@ cd "$BITCART_BASE_DIRECTORY"
 ./update.sh
 
 COMPONENTS=$(./build.sh --components-only | tail -1)
-IFS=', ' read -r -a CRYPTOS <<<"$BITCART_CRYPTOS"
+IFS=', ' read -r -a CRYPTOS <<<"$RDWV_CRYPTOS"
 
 ./dev-setup.sh
 
 cd compose
 
 if [[ " ${COMPONENTS[*]} " =~ " backend " ]]; then
-    docker build -t bitcart/bitcart:stable -f backend.Dockerfile . || true
+    docker build -t rdwv/rdwv:stable -f backend.Dockerfile . || true
 fi
 
 for coin in "${CRYPTOS[@]}"; do
-    docker build -t bitcart/bitcart-$coin:stable -f $coin.Dockerfile . || true
+    docker build -t rdwv/rdwv-$coin:stable -f $coin.Dockerfile . || true
 done
 
 cd ..
-rm -rf compose/bitcart
+rm -rf compose/rdwv
 
 build_additional_image() {
     if [[ " ${COMPONENTS[*]} " =~ " $1 " ]]; then
         OLDDIR="$PWD"
         TEMP_DIR=$(mktemp -d 2>/dev/null || mktemp -d -t 'mytmpdir')
         cd $TEMP_DIR
-        git clone https://github.com/bitcart/bitcart-$1
-        cd bitcart-$1
-        docker build -t bitcart/bitcart-$1:stable . || true
+        git clone https://github.com/rdwv/rdwv-$1
+        cd rdwv-$1
+        docker build -t rdwv/rdwv-$1:stable . || true
         cd "$OLDDIR"
         rm -rf $TEMP_DIR
     fi
@@ -45,5 +45,5 @@ build_additional_image() {
 
 build_additional_image admin
 build_additional_image store
-bitcart_reset_plugins
-bitcart_start
+rdwv_reset_plugins
+rdwv_start

@@ -1,6 +1,6 @@
-FROM bitcart/bitcart:original
+FROM rdwv/rdwv:original
 
 COPY plugins/backend modules
 COPY scripts/install-backend-plugins.sh /usr/local/bin/
 RUN bash install-backend-plugins.sh
-LABEL org.bitcart.plugins=true
+LABEL org.rdwv.plugins=true

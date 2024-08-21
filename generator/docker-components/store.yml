@@ -1,18 +1,18 @@
 services:
   store:
     restart: unless-stopped
-    image: bitcart/bitcart-store:stable
+    image: rdwv/rdwv-store:stable
     expose:
       - "3000"
     command: yarn start
     environment:
-      BITCART_STORE_API_URL: ${BITCART_STORE_API_URL}
+      RDWV_STORE_API_URL: ${RDWV_STORE_API_URL}
       VIRTUAL_NETWORK: nginx-proxy
       VIRTUAL_PORT: 3000
-      VIRTUAL_HOST: ${BITCART_STORE_HOST}
-      VIRTUAL_HOST_NAME: "bitcart-store"
-      LETSENCRYPT_HOST: ${BITCART_STORE_HOST}
-      LETSENCRYPT_EMAIL: ${BITCART_LETSENCRYPT_EMAIL}
-      BITCART_STORE_ROOTPATH: ${BITCART_STORE_ROOTPATH:-/}
-      BITCART_ADMIN_HOST: ${BITCART_ADMIN_HOST}
-      BITCART_ADMIN_ROOTPATH: ${BITCART_ADMIN_ROOTPATH:-/}
+      VIRTUAL_HOST: ${RDWV_STORE_HOST}
+      VIRTUAL_HOST_NAME: "rdwv-store"
+      LETSENCRYPT_HOST: ${RDWV_STORE_HOST}
+      LETSENCRYPT_EMAIL: ${RDWV_LETSENCRYPT_EMAIL}
+      RDWV_STORE_ROOTPATH: ${RDWV_STORE_ROOTPATH:-/}
+      RDWV_ADMIN_HOST: ${RDWV_ADMIN_HOST}
+      RDWV_ADMIN_ROOTPATH: ${RDWV_ADMIN_ROOTPATH:-/}

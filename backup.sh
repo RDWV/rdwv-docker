@@ -3,17 +3,17 @@
 set -e
 
 # Add any volume names that need to be backed up here
-BACKUP_VOLUMES=(bitcart_datadir tor_servicesdir tor_datadir tor_relay_datadir)
+BACKUP_VOLUMES=(rdwv_datadir tor_servicesdir tor_datadir tor_relay_datadir)
 
 function display_help() {
     cat <<-END
 Usage:
 ------
-Backup Bitcart files
+Backup RDWV files
 This script must be run as root
     -h, --help: Show help
     --only-db: Backup database only. Default: false
-    --restart: Restart Bitcart (to avoid data corruption if needed). Default: false
+    --restart: Restart RDWV (to avoid data corruption if needed). Default: false
 This script will backup the database as SQL script, essential volumes and put it to tar.gz archive
 It may optionally upload the backup to a remote server
 Environment variables:
@@ -69,7 +69,7 @@ done
 . helpers.sh
 load_env true
 
-cd "$BITCART_BASE_DIRECTORY"
+cd "$RDWV_BASE_DIRECTORY"
 
 deployment_name=$(volume_name)
 volumes_dir=/var/lib/docker/volumes
@@ -82,14 +82,14 @@ backup_path="$backup_dir/_data/${filename}"
 dbdump_path="$backup_dir/_data/${dumpname}"
 
 echo "Dumping database …"
-bitcart_dump_db $dumpname
+rdwv_dump_db $dumpname
 
 if $ONLY_DB; then
     tar -cvzf $backup_path $dbdump_path
 else
     if $RESTART_SERVICES; then
-        echo "Stopping Bitcart…"
-        bitcart_stop
+        echo "Stopping RDWV…"
+        rdwv_stop
     fi
 
     echo "Backing up files …"
@@ -101,13 +101,13 @@ else
         fi
     done
     # put all volumes to volumes directory and remove timestamps
-    tar -cvzf $backup_path -C $volumes_dir --exclude="$(volume_name bitcart_datadir)/_data/host_authorized_keys" --exclude="$(volume_name bitcart_datadir)/_data/host_id_rsa" --exclude="$(volume_name bitcart_datadir)/_data/host_id_rsa.pub" --transform "s|^$deployment_name|volumes/$deployment_name|" "${files[@]}" \
+    tar -cvzf $backup_path -C $volumes_dir --exclude="$(volume_name rdwv_datadir)/_data/host_authorized_keys" --exclude="$(volume_name rdwv_datadir)/_data/host_id_rsa" --exclude="$(volume_name rdwv_datadir)/_data/host_id_rsa.pub" --transform "s|^$deployment_name|volumes/$deployment_name|" "${files[@]}" \
         -C "$(dirname $dbdump_path)" --transform "s|$timestamp-||" --transform "s|$timestamp||" $dumpname \
-        -C "$BITCART_BASE_DIRECTORY/compose" plugins
+        -C "$RDWV_BASE_DIRECTORY/compose" plugins
 
     if $RESTART_SERVICES; then
-        echo "Restarting Bitcart…"
-        bitcart_start
+        echo "Restarting RDWV…"
+        rdwv_start
     fi
 fi
 

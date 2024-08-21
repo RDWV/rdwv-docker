@@ -1,22 +1,22 @@
 services:
   backend:
     restart: unless-stopped
-    image: bitcart/bitcart:stable
+    image: rdwv/rdwv:stable
     command: bash -c "alembic upgrade head && gunicorn -c gunicorn.conf.py main:app"
     environment:
-      LOG_FILE: bitcart.log
-      BITCART_DATADIR: /datadir
-      BITCART_BACKUPS_DIR: /backups
-      BITCART_VOLUMES: /datadir /backups /plugins
+      LOG_FILE: rdwv.log
+      RDWV_DATADIR: /datadir
+      RDWV_BACKUPS_DIR: /backups
+      RDWV_VOLUMES: /datadir /backups /plugins
       DB_PORT: 5432
       DB_HOST: database
       VIRTUAL_NETWORK: nginx-proxy
       VIRTUAL_PORT: 8000
-      VIRTUAL_HOST: ${BITCART_HOST}
-      VIRTUAL_HOST_NAME: "bitcart-backend"
-      LETSENCRYPT_HOST: ${BITCART_HOST}
-      LETSENCRYPT_EMAIL: ${BITCART_LETSENCRYPT_EMAIL}
-      BITCART_CRYPTOS: ${BITCART_CRYPTOS:-btc}
+      VIRTUAL_HOST: ${RDWV_HOST}
+      VIRTUAL_HOST_NAME: "rdwv-backend"
+      LETSENCRYPT_HOST: ${RDWV_HOST}
+      LETSENCRYPT_EMAIL: ${RDWV_LETSENCRYPT_EMAIL}
+      RDWV_CRYPTOS: ${RDWV_CRYPTOS:-btc}
       BTC_NETWORK: ${BTC_NETWORK:-mainnet}
       BTC_LIGHTNING: ${BTC_LIGHTNING:-false}
       BCH_NETWORK: ${BCH_NETWORK:-mainnet}
@@ -33,33 +33,33 @@ services:
       GRS_NETWORK: ${GRS_NETWORK:-mainnet}
       GRS_LIGHTNING: ${GRS_LIGHTNING:-false}
       XMR_NETWORK: ${XMR_NETWORK:-mainnet}
-      UPDATE_URL: ${BITCART_UPDATE_URL:-https://api.bitcart.ai/updates/latest}
-      BITCART_BACKEND_ROOTPATH: ${BITCART_BACKEND_ROOTPATH:-}
-      SSH_CONNECTION: "root@host.docker.internal:$<BITCART_SSH_PORT>:22?"
-      SSH_KEY_FILE: ${BITCART_SSH_KEY_FILE}
-      SSH_AUTHORIZED_KEYS: ${BITCART_SSH_AUTHORIZED_KEYS}
+      UPDATE_URL: ${RDWV_UPDATE_URL:-https://api.rdwv.ai/updates/latest}
+      RDWV_BACKEND_ROOTPATH: ${RDWV_BACKEND_ROOTPATH:-}
+      SSH_CONNECTION: "root@host.docker.internal:$<RDWV_SSH_PORT>:22?"
+      SSH_KEY_FILE: ${RDWV_SSH_KEY_FILE}
+      SSH_AUTHORIZED_KEYS: ${RDWV_SSH_AUTHORIZED_KEYS}
       BASH_PROFILE_SCRIPT: ${BASH_PROFILE_SCRIPT}
-      BITCART_BACKEND_PLUGINS_DIR: /plugins/backend
-      BITCART_ADMIN_PLUGINS_DIR: /plugins/admin
-      BITCART_STORE_PLUGINS_DIR: /plugins/store
-      BITCART_DOCKER_PLUGINS_DIR: /plugins/docker
-      BITCART_HOST: ${BITCART_HOST}
-      BITCART_ADMIN_HOST: ${BITCART_ADMIN_HOST}
-      BITCART_ADMIN_ROOTPATH: ${BITCART_ADMIN_ROOTPATH:-/}
-      BITCART_REVERSEPROXY: ${BITCART_REVERSEPROXY:-nginx-https}
-      BITCART_HTTPS_ENABLED: ${BITCART_HTTPS_ENABLED:-false}
+      RDWV_BACKEND_PLUGINS_DIR: /plugins/backend
+      RDWV_ADMIN_PLUGINS_DIR: /plugins/admin
+      RDWV_STORE_PLUGINS_DIR: /plugins/store
+      RDWV_DOCKER_PLUGINS_DIR: /plugins/docker
+      RDWV_HOST: ${RDWV_HOST}
+      RDWV_ADMIN_HOST: ${RDWV_ADMIN_HOST}
+      RDWV_ADMIN_ROOTPATH: ${RDWV_ADMIN_ROOTPATH:-/}
+      RDWV_REVERSEPROXY: ${RDWV_REVERSEPROXY:-nginx-https}
+      RDWV_HTTPS_ENABLED: ${RDWV_HTTPS_ENABLED:-false}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     expose:
       - "8000"
     volumes:
-      - "bitcart_datadir:/datadir"
+      - "rdwv_datadir:/datadir"
       - "backup_datadir:/backups"
       - "./plugins/backend:/plugins/backend"
       - "./plugins/admin:/plugins/admin"
       - "./plugins/store:/plugins/store"
       - "./plugins/docker:/plugins/docker"
-      - "$<BITCART_HOST_SSH_AUTHORIZED_KEYS>?:${BITCART_SSH_AUTHORIZED_KEYS}"
+      - "$<RDWV_HOST_SSH_AUTHORIZED_KEYS>?:${RDWV_SSH_AUTHORIZED_KEYS}"
 
   worker:
     depends_on:
@@ -68,6 +68,6 @@ services:
       - backend
 
 volumes:
-  bitcart_datadir:
+  rdwv_datadir:
   backup_datadir:
     external: true

@@ -1,11 +1,11 @@
 import os
 
 
-def set_env(name, value, prefix="BITCART_"):
+def set_env(name, value, prefix="RDWV_"):
     os.environ[f"{prefix}{name}"] = value
 
 
-def delete_env(name, prefix="BITCART_"):
+def delete_env(name, prefix="RDWV_"):
     del os.environ[f"{prefix}{name}"]
 
 

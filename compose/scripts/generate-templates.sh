@@ -6,7 +6,7 @@ set -Eeuo pipefail
 images="compose/scripts/.images.json"
 
 if [ ! -f "$images" ] || [ ! "$#" -eq 0 ]; then
-    wget -qO "$images" 'https://raw.githubusercontent.com/bitcart/bitcart/master/.circleci/images.json'
+    wget -qO "$images" 'https://raw.githubusercontent.com/rdwv/rdwv/master/.circleci/images.json'
 fi
 
 generated_warning() {
@@ -27,16 +27,16 @@ for coin in "${coins[@]}"; do
     if [ "$coin" == "backend" ]; then
         continue
     fi
-    export bases=$(jq -r ".[\"bitcart-$coin\"].bases // \"btc\"" $images)
+    export bases=$(jq -r ".[\"rdwv-$coin\"].bases // \"btc\"" $images)
     export coin
     custom=false
-    name=$(jq -r ".[\"bitcart-$coin\"].name // \"\"" $images)
+    name=$(jq -r ".[\"rdwv-$coin\"].name // \"\"" $images)
     if [ -z "$name" ]; then
         if [ "$bases" == "btc" ]; then
             name="electrum"
         fi
         if [ "$bases" == "eth" ]; then
-            name="bitcart"
+            name="rdwv"
         fi
     else
         custom=true
